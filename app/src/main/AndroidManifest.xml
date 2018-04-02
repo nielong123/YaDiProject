@@ -25,18 +25,18 @@
             android:name="com.amap.api.v2.apikey"
             android:value="74bb6cb12922e63a5358575493e90534" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name="gaode.trajectory.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="gaode.trajectory.TrajectoryActivity" />
+        <activity android:name="gaode.trajectory.ui.activity.TrajectoryActivity" />
 
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name="gaode.trajectory.MapActivity"></activity>
+        <activity android:name="gaode.trajectory.ui.activity.MapActivity" />
     </application>
 
 </manifest>

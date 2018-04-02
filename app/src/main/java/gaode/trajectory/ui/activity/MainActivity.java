@@ -1,4 +1,4 @@
-package gaodedemo.nl.org.gaodedemoapplication;
+package gaode.trajectory.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
-import java.util.List;
 
 import app.BaseRecyclerViewAdapter;
-import gaode.trajectory.MapActivity;
-import gaode.trajectory.TrajectoryActivity;
+import gaode.trajectory.ui.activity.MapActivity;
+import gaode.trajectory.ui.activity.TrajectoryActivity;
+import gaodedemo.nl.org.gaodedemoapplication.R;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -86,7 +86,7 @@ public abstract class BaseActivity<T extends BasePresenter, E extends BaseModel>
         }
         this.initPresenter();
         this.initData();
-        this.initView();
+        this.initView(savedInstanceState);
     }
 
     /**
@@ -116,7 +116,7 @@ public abstract class BaseActivity<T extends BasePresenter, E extends BaseModel>
     protected abstract void initPresenter();
 
     //初始化view
-    protected abstract void initView();
+    protected abstract void initView(Bundle savedInstanceState);
 
     //初始化数据
     protected abstract void initData();

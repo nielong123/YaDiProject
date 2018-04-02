@@ -3,6 +3,7 @@ package com.jaydenxiao.common.imagePager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -72,7 +73,17 @@ public class BigImagePagerActivity extends BaseActivity {
     }
 
     @Override
-    public void initView() {
+    protected void initData() {
+
+    }
+
+    @Override
+    public void initPresenter() {
+
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
         //设置透明状态栏
         SetTranslanteBar();
 
@@ -107,16 +118,6 @@ public class BigImagePagerActivity extends BaseActivity {
         viewPager.setCurrentItem(startPos);
 
         addGuideView(guideGroup, startPos, imgUrls);
-    }
-
-    @Override
-    protected void initData() {
-
-    }
-
-    @Override
-    public void initPresenter() {
-
     }
 
     private void addGuideView(LinearLayout guideGroup, int startPos, ArrayList<String> imgUrls) {
