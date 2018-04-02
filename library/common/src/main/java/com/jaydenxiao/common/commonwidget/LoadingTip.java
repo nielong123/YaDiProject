@@ -118,7 +118,7 @@ public class LoadingTip extends LinearLayout {
                 setVisibility(View.VISIBLE);
                 img_tip_logo.setVisibility(View.GONE);
                 progress.setVisibility(View.VISIBLE);
-                tv_tips.setText(getContext().getText(R.string.loading).toString());
+                tv_tips.setText(getContext().getText(R.string.loading111).toString());
                 break;
             case finish:
                 setVisibility(View.GONE);

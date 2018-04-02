@@ -15,7 +15,7 @@ android {
     }
 
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '27.0.3'
 
     useLibrary 'org.apache.http.legacy'
 
@@ -40,6 +40,13 @@ android {
             jniLibs.srcDirs = ['jniLibs']
         }
     }
+    dexOptions {
+        incremental true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
 
 dependencies {
@@ -54,14 +61,14 @@ dependencies {
     compile files('libs/AMap_Navi_v1.8.0_20160421.jar')
     compile files('libs/AMap_Search_V3.2.1_20160308.jar')
     compile 'com.android.support:support-v13:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:support-v13:24.2.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.kyleduo.switchbutton:library:1.4.4'
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile project(path: ':library:common')
+    implementation files('libs/afinal_0.5_bin.jar')
 }

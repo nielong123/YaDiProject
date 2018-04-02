@@ -85,8 +85,8 @@ public abstract class BaseActivity<T extends BasePresenter, E extends BaseModel>
             mPresenter.mContext = this;
         }
         this.initPresenter();
-        this.initData();
         this.initView(savedInstanceState);
+        this.initData();
     }
 
     /**

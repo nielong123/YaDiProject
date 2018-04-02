@@ -15,6 +15,7 @@ import rx.Subscriber;
  * Created by xsf
  * on 2016.09.10:16
  */
+
 /********************使用例子********************/
 /*_apiService.login(mobile, verifyCode)
         .//省略
@@ -32,28 +33,31 @@ public abstract class RxSubscriber<T> extends Subscriber<T> {
 
     private Context mContext;
     private String msg;
-    private boolean showDialog=true;
+    private boolean showDialog = true;
 
     /**
      * 是否显示浮动dialog
      */
     public void showDialog() {
-        this.showDialog= true;
-    }
-    public void hideDialog() {
-        this.showDialog= true;
+        this.showDialog = true;
     }
 
-    public RxSubscriber(Context context, String msg,boolean showDialog) {
+    public void hideDialog() {
+        this.showDialog = true;
+    }
+
+    public RxSubscriber(Context context, String msg, boolean showDialog) {
         this.mContext = context;
         this.msg = msg;
-        this.showDialog=showDialog;
+        this.showDialog = showDialog;
     }
+
     public RxSubscriber(Context context) {
-        this(context, BaseApplication.getAppContext().getString(R.string.loading),true);
+        this(context, "请稍后", true);
     }
-    public RxSubscriber(Context context,boolean showDialog) {
-        this(context, BaseApplication.getAppContext().getString(R.string.loading),showDialog);
+
+    public RxSubscriber(Context context, boolean showDialog) {
+        this(context, BaseApplication.getAppContext().getString(R.string.loading111), showDialog);
     }
 
     @Override
@@ -61,12 +65,13 @@ public abstract class RxSubscriber<T> extends Subscriber<T> {
         if (showDialog)
             LoadingDialog.cancelDialogForLoading();
     }
+
     @Override
     public void onStart() {
         super.onStart();
         if (showDialog) {
             try {
-                LoadingDialog.showDialogForLoading((Activity) mContext,msg,true);
+                LoadingDialog.showDialogForLoading((Activity) mContext, msg, true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -78,6 +83,7 @@ public abstract class RxSubscriber<T> extends Subscriber<T> {
     public void onNext(T t) {
         _onNext(t);
     }
+
     @Override
     public void onError(Throwable e) {
         if (showDialog)

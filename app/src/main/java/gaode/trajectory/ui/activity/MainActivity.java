@@ -14,9 +14,7 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
-import app.BaseRecyclerViewAdapter;
-import gaode.trajectory.ui.activity.MapActivity;
-import gaode.trajectory.ui.activity.TrajectoryActivity;
+import gaode.trajectory.adapter.BaseRecyclerViewAdapter;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
 public class MainActivity extends AppCompatActivity {
