@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:src="@drawable/triangle" />
+                android:src="@drawable/play" />
 
         </RelativeLayout>
 

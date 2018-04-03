@@ -55,9 +55,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         monitoring.setOnClickListener(this);
         FragmentManager fm = getSupportFragmentManager();
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(AlarmStatisticsFragment.newInstance());
-        fragments.add(BaseInfoFragment.newInstance());
         fragments.add(MapFragment.newInstance());
+        fragments.add(BaseInfoFragment.newInstance());
+        fragments.add(AlarmStatisticsFragment.newInstance());
         fragments.add(TrajectoryFragment.newInstance());
         tabFragmentPagerAdapter = new TabFragmentPagerAdapter(fm, fragments);
         viewPager.setAdapter(tabFragmentPagerAdapter);
@@ -73,10 +73,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.base_info:
+            case R.id.monitoring:
                 viewPager.setCurrentItem(0);
                 break;
-            case R.id.monitoring:
+            case R.id.base_info:
                 viewPager.setCurrentItem(1);
                 break;
             case R.id.alarm_statistics:

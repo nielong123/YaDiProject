@@ -163,7 +163,7 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
             if (runnable != null) {
                 if (isPlaying) {
                     runnable.stopPlay();
-                    Picasso.with(TrajectoryActivity.this).load(R.drawable.triangle).into(play_image);
+                    Picasso.with(TrajectoryActivity.this).load(R.drawable.play).into(play_image);
                 } else {
                     runnable.reStartPlay();
                     Picasso.with(TrajectoryActivity.this).load(R.drawable.stop).into(play_image);
@@ -233,7 +233,7 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
 
         @Override
         public void onFinishPlaying() {
-            Picasso.with(TrajectoryActivity.this).load(R.drawable.triangle).into(play_image);
+            Picasso.with(TrajectoryActivity.this).load(R.drawable.play).into(play_image);
             isPlaying = false;
             Log.d(TAG, "onFinishPlaying");
         }
@@ -269,7 +269,7 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatLng, Config.ZoomLevel));
         if (moveMarker == null) {
             MarkerOptions markerOptions = new MarkerOptions().setFlat(true).anchor(0.5f, 0.5f)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.trajectory_dot_one))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pot))
                     .position(startLatLng).zIndex(12).title("信息");
             moveMarker = aMap.addMarker(markerOptions);
             moveMarker.showInfoWindow();
@@ -278,7 +278,7 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
 
         if (startMarker == null) {
             MarkerOptions odev = new MarkerOptions().position(startLatLng)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.trajectory_dot_start))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.start))
                     .zIndex(10)
                     .draggable(false);
             startMarker = (aMap.addMarker(odev));
@@ -287,7 +287,7 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
 
         if (endMarker == null) {
             MarkerOptions odev1 = new MarkerOptions().position(endLatLng)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.trajectory_dot_end)).zIndex(10).draggable(false);//
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.end)).zIndex(10).draggable(false);//
             endMarker = (aMap.addMarker(odev1));
         }
         endMarker.setPosition(endLatLng);
