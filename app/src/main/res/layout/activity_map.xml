@@ -4,29 +4,28 @@
     android:background="#eeeff4"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="48dp"
-            android:layout_height="48dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true" />
-        </RelativeLayout>
-
-
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="车辆详情" />
-    </RelativeLayout>
+            android:src="@drawable/ic_luncher" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/logo" />
+
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
