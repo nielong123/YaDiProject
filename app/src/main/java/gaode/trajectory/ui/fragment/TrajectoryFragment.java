@@ -41,7 +41,7 @@ public class TrajectoryFragment extends BaseFragment {
     }
 
     @Override
-    protected void initView() {
+    protected void initView(Bundle savedInstanceState) {
 
     }
 

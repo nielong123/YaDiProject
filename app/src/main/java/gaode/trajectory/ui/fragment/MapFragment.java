@@ -6,9 +6,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.MapView;
 import com.jaydenxiao.common.base.BaseFragment;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
 /**
@@ -18,6 +24,16 @@ import gaodedemo.nl.org.gaodedemoapplication.R;
  */
 public class MapFragment extends BaseFragment {
 
+    @BindView(R.id.car_id)
+    TextView carId;
+    @BindView(R.id.address)
+    TextView address;
+    @BindView(R.id.location_time)
+    TextView locationTime;
+    @BindView(R.id.mapview)
+    MapView mapview;
+
+    AMap aMap;
 
     public MapFragment() {
         // Required empty public constructor
@@ -49,13 +65,15 @@ public class MapFragment extends BaseFragment {
     }
 
     @Override
-    protected void initView() {
-
+    protected void initView(Bundle savedInstanceState) {
+        mapview.onCreate(savedInstanceState);
+        aMap = mapview.getMap();
     }
 
     @Override
     protected void initData() {
 
     }
+
 
 }

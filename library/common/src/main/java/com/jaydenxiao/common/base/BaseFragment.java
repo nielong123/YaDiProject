@@ -74,7 +74,7 @@ public abstract class BaseFragment<T extends BasePresenter, E extends BaseModel>
         }
         initPresenter();
         initData();
-        initView();
+        initView(savedInstanceState);
         return rootView;
     }
 
@@ -85,7 +85,7 @@ public abstract class BaseFragment<T extends BasePresenter, E extends BaseModel>
     public abstract void initPresenter();
 
     //初始化view
-    protected abstract void initView();
+    protected abstract void initView(Bundle savedInstanceState);
 
     protected abstract void initData();
 
