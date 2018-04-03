@@ -2,6 +2,7 @@ package gaode.trajectory.ui.activity;
 
 import android.os.Bundle;
 
+import com.aspsine.irecyclerview.IRecyclerView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import gaode.trajectory.bean.AlarmStatisticsBean;
 import gaode.trajectory.widget.TitleView;
 import gaodedemo.nl.org.gaodedemoapplication.R;
@@ -30,9 +32,12 @@ public class AlarmStatisticsActivity extends BaseActivity {
     TitleView titleView;
     @BindView(R.id.chart)
     BarChart chart;
+    @BindView(R.id.recyclerview)
+    IRecyclerView recyclerview;
 
     List<BarEntry> entries = new ArrayList<>();
     List<List<String>> data;
+
 
     @Override
     protected int getLayoutId() {
@@ -98,7 +103,6 @@ public class AlarmStatisticsActivity extends BaseActivity {
                 chart.setData(data);
                 chart.setFitBars(true); //使x轴完全适合所有条形
                 chart.invalidate(); // refresh
-//                chart.setTouchEnabled(true);
             }
 
             @Override

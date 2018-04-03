@@ -1,117 +1,91 @@
 package gaode.trajectory.ui.activity;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.HashMap;
+import com.jaydenxiao.common.base.BaseActivity;
 
-import gaode.trajectory.adapter.BaseRecyclerViewAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import gaode.trajectory.ui.fragment.AlarmStatisticsFragment;
+import gaode.trajectory.ui.fragment.BaseInfoFragment;
+import gaode.trajectory.ui.fragment.MapFragment;
+import gaode.trajectory.ui.fragment.TrajectoryFragment;
+import gaode.trajectory.widget.CustomViewPager;
+import gaode.trajectory.widget.TabFragmentPagerAdapter;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
-    HashMap<Integer, String> list = new HashMap<>();
-    private RecyclerView recyclerview;
+    @BindView(R.id.view_pager)
+    CustomViewPager viewPager;
+    @BindView(R.id.base_info)
+    TextView baseInfo;
+    @BindView(R.id.alarm_statistics)
+    TextView alarmStatistics;
+    @BindView(R.id.history)
+    TextView history;
+    @BindView(R.id.monitoring)
+    TextView monitoring;
+
+    TabFragmentPagerAdapter tabFragmentPagerAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initData();
-        initView();
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
 
-    void initData() {
-        list.put(0, "轨迹重放");
-        list.put(1, "轨迹规划");
-        list.put(2, "3d导航");
-        list.put(3, "车辆集合");
+    @Override
+    protected void initPresenter() {
+
     }
 
-    void initView() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayout.VERTICAL);
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(list, this);
-        recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
-        recyclerview.setLayoutManager(linearLayoutManager);
-        recyclerview.setAdapter(recyclerViewAdapter);
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        baseInfo.setOnClickListener(this);
+        alarmStatistics.setOnClickListener(this);
+        history.setOnClickListener(this);
+        monitoring.setOnClickListener(this);
+        FragmentManager fm = getSupportFragmentManager();
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(AlarmStatisticsFragment.newInstance());
+        fragments.add(BaseInfoFragment.newInstance());
+        fragments.add(MapFragment.newInstance());
+        fragments.add(TrajectoryFragment.newInstance());
+        tabFragmentPagerAdapter = new TabFragmentPagerAdapter(fm, fragments);
+        viewPager.setAdapter(tabFragmentPagerAdapter);
+        viewPager.setCurrentItem(0);
+        viewPager.setScanScroll(false);
     }
 
+    @Override
+    protected void initData() {
 
-    private class RecyclerViewAdapter extends BaseRecyclerViewAdapter<RecyclerViewAdapter.ViewHolder> {
+    }
 
-        private HashMap<Integer, String> list = new HashMap<>();
-        private LayoutInflater inflaterView = null;
-        private Context context;
-
-        public RecyclerViewAdapter(HashMap<Integer, String> list, Context context) {
-            super(context);
-            this.list = list;
-            this.context = context;
-            this.inflaterView = LayoutInflater.from(context);
-        }
-
-        public int getItemCount() {
-            if (list != null) {
-                return list.size();
-            }
-            return 0;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return super.getItem(position);
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflaterView.inflate(R.layout.mainactivity_item, null);
-            return new ViewHolder(view);
-        }
-
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, final int position) {
-            super.onBindViewHolder(holder, position);
-            holder.name.setText(list.get(position));
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switch (position) {
-                        case 0:
-                            startActivity(new Intent(MainActivity.this, TrajectoryActivity.class));
-                            break;
-                        case 1:
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            startActivity(new Intent(MainActivity.this, MapActivity.class));
-                            break;
-                    }
-                }
-            });
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public View rootView;
-            public TextView name;
-
-            public ViewHolder(View rootView) {
-                super(rootView);
-                this.rootView = rootView;
-                this.name = (TextView) rootView.findViewById(R.id.name);
-            }
-
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.base_info:
+                viewPager.setCurrentItem(0);
+                break;
+            case R.id.monitoring:
+                viewPager.setCurrentItem(1);
+                break;
+            case R.id.alarm_statistics:
+                viewPager.setCurrentItem(2);
+                break;
+            case R.id.history:
+                viewPager.setCurrentItem(3);
+                break;
         }
     }
+
 }
