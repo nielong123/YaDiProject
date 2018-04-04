@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.jaydenxiao.common.base.BaseActivity;
 
+import net.tsz.afinal.FinalHttp;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +88,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 viewPager.setCurrentItem(3);
                 break;
         }
+    }
+
+
+
+    private void sendTerminalControl(){
+        FinalHttp finalHttp = new FinalHttp();
+
     }
 
 }

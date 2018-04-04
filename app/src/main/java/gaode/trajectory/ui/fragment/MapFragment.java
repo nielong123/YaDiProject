@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
 import com.jaydenxiao.common.base.BaseFragment;
 
 import butterknife.BindView;
@@ -31,7 +32,7 @@ public class MapFragment extends BaseFragment {
     @BindView(R.id.location_time)
     TextView locationTime;
     @BindView(R.id.mapview)
-    MapView mapview;
+    TextureMapView mapview;
 
     AMap aMap;
 
@@ -67,7 +68,42 @@ public class MapFragment extends BaseFragment {
     @Override
     protected void initView(Bundle savedInstanceState) {
         mapview.onCreate(savedInstanceState);
-        aMap = mapview.getMap();
+        if (aMap == null) {
+            aMap = mapview.getMap();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        mapview.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapview.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapview.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mapview != null) {
+            mapview.onDestroy();
+        }
+        aMap = null;
     }
 
     @Override
