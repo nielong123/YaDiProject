@@ -73,12 +73,12 @@ public class MapFragment extends BaseFragment {
 //        if (aMap == null) {
 //            aMap = mapview.getMap();
 //        }
-//        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                sendTerminalControl(b);
-//            }
-//        });
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                sendTerminalControl(b);
+            }
+        });
     }
 
     @Override

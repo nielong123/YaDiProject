@@ -1,33 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="gaode.trajectory.ui.fragment.TrajectoryFragment">
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始时间:" />
+
+        <TextView
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/datebutton"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="结束时间:" />
+
+        <TextView
+            android:id="@+id/end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/datebutton"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn1"
-            android:layout_width="wrap_content"
+            android:id="@+id/search"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="轨迹1号" />
-
-        <Button
-            android:id="@+id/btn2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="轨迹2号" />
+            android:text="查   询" />
     </LinearLayout>
 
-    <com.amap.api.maps.MapView
+    <com.amap.api.maps.TextureMapView
         android:id="@+id/mapview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:layout_weight="1" />
 
     <LinearLayout
@@ -65,23 +100,22 @@
             android:layout_weight="4"
             android:max="100" />
 
-        <RelativeLayout
-            android:layout_width="48dp"
-            android:layout_height="match_parent">
+        <!--<RelativeLayout-->
+        <!--android:layout_width="48dp"-->
+        <!--android:layout_height="match_parent">-->
 
-            <com.kyleduo.switchbutton.SwitchButton
-                android:id="@+id/switchButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:checked="false"
-                android:gravity="center"
-                android:text="气泡"
-                android:textColor="@color/white" />
+        <!--<com.kyleduo.switchbutton.SwitchButton-->
+        <!--android:id="@+id/switchButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:checked="false"-->
+        <!--android:gravity="center"-->
+        <!--android:text="气泡"-->
+        <!--android:textColor="@color/white" />-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
     </LinearLayout>
-
 </LinearLayout>

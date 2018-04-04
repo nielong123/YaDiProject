@@ -73,8 +73,8 @@ public abstract class BaseFragment<T extends BasePresenter, E extends BaseModel>
             mPresenter.mContext = this.getActivity();
         }
         initPresenter();
-        initData();
         initView(savedInstanceState);
+        initData();
         return rootView;
     }
 

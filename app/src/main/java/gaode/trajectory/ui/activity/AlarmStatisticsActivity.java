@@ -4,13 +4,10 @@ import android.os.Bundle;
 
 import com.aspsine.irecyclerview.IRecyclerView;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.google.gson.Gson;
 import com.jaydenxiao.common.base.BaseActivity;
 import com.jaydenxiao.common.commonutils.LogUtils;
 
@@ -21,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import gaode.trajectory.bean.TrajectoryBean;
 import gaode.trajectory.widget.TitleView;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
