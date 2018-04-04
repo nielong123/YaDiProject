@@ -6,16 +6,22 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
 import com.jaydenxiao.common.base.BaseFragment;
+
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import gaode.trajectory.api.Api;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
 /**
@@ -33,6 +39,9 @@ public class MapFragment extends BaseFragment {
     TextView locationTime;
     @BindView(R.id.mapview)
     TextureMapView mapview;
+    @BindView(R.id.checkbox)
+    CheckBox checkbox;
+
 
     AMap aMap;
 
@@ -71,11 +80,16 @@ public class MapFragment extends BaseFragment {
         if (aMap == null) {
             aMap = mapview.getMap();
         }
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                sendTerminalControl(b);
+            }
+        });
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapview.onSaveInstanceState(outState);
     }
@@ -111,5 +125,47 @@ public class MapFragment extends BaseFragment {
 
     }
 
+    private void sendTerminalControl(boolean isStop) {
+
+        FinalHttp finalHttp = new FinalHttp();
+        AjaxParams ajaxParams = new AjaxParams();
+        ajaxParams.put("clientId", "013511112222");
+        if (isStop) {
+            ajaxParams.put("defences", "0");
+        } else {
+            ajaxParams.put("defences", "1");
+        }
+//        if (isStop) {
+//            ajaxParams.put("parameter", "{defences:0}");
+//        } else {
+//            ajaxParams.put("parameter", "{defences:1}");
+//        }
+        finalHttp.post(Api.URL + "test/device/terminalControl", ajaxParams, new AjaxCallBack<String>() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                super.onSuccess(s);
+            }
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                super.onFailure(t, errorNo, strMsg);
+            }
+        });
+
+    }
+
+
+    private void getCarData(){
+        FinalHttp finalHttp = new FinalHttp();
+        AjaxParams ajaxParams = new AjaxParams();
+//        finalHttp.post(Api.URL + "");
+
+    }
 
 }
