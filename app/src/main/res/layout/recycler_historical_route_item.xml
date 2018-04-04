@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="#fff"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="13dp"
+    android:paddingTop="10dp">
+
+    <!---->
+
+    <TextView
+        android:id="@+id/total_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="总里程："
+        android:textColor="#333"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/text_total_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/total_distance"
+        android:text="10km"
+        android:textColor="#333"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="查看 >"
+        android:textColor="#666"
+        android:textSize="16sp" />
+
+    <!---->
+
+    <TextView
+        android:id="@+id/text_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/total_distance"
+        android:layout_marginTop="10dp"
+        android:maxLines="1"
+        android:text="2018-3-4 19:00 至 2018-3-4 19:00"
+        android:textColor="#333"
+        android:textSize="14sp" />
+
+    <!---->
+
+    <TextView
+        android:id="@+id/origin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_time"
+        android:layout_marginTop="10dp"
+        android:text="起"
+        android:textColor="#67B012"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/text_origin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_time"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/origin"
+        android:maxLines="1"
+        android:text="尚美中心"
+        android:textColor="#333"
+        android:textSize="14sp" />
+
+    <!---->
+
+    <TextView
+        android:id="@+id/terminus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/origin"
+        android:layout_marginTop="10dp"
+        android:text="终"
+        android:textColor="#EC4410"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/text_terminus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/origin"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/terminus"
+        android:maxLines="1"
+        android:text="南山科技园"
+        android:textColor="#333"
+        android:textSize="14sp" />
+
+</RelativeLayout>

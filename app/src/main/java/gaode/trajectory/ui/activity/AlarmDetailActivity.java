@@ -2,7 +2,6 @@ package gaode.trajectory.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,10 +18,7 @@ import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 
-import java.util.concurrent.TimeUnit;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import gaode.trajectory.bean.AlarmDetailBean;
 import gaode.trajectory.widget.SpaceItemDecoration;
 import gaode.trajectory.widget.TitleView;

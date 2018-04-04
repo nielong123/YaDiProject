@@ -3,9 +3,6 @@ package gaode.trajectory.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -19,8 +16,6 @@ import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import gaode.trajectory.api.Api;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
@@ -37,8 +32,8 @@ public class MapFragment extends BaseFragment {
     TextView address;
     @BindView(R.id.location_time)
     TextView locationTime;
-    @BindView(R.id.mapview)
-    TextureMapView mapview;
+//    @BindView(R.id.mapview)
+//    TextureMapView mapview;
     @BindView(R.id.checkbox)
     CheckBox checkbox;
 
@@ -60,8 +55,6 @@ public class MapFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
@@ -76,22 +69,22 @@ public class MapFragment extends BaseFragment {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mapview.onCreate(savedInstanceState);
-        if (aMap == null) {
-            aMap = mapview.getMap();
-        }
-        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                sendTerminalControl(b);
-            }
-        });
+//        mapview.onCreate(savedInstanceState);
+//        if (aMap == null) {
+//            aMap = mapview.getMap();
+//        }
+//        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                sendTerminalControl(b);
+//            }
+//        });
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapview.onSaveInstanceState(outState);
+//        mapview.onSaveInstanceState(outState);
     }
 
     @Override
@@ -102,27 +95,27 @@ public class MapFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mapview.onResume();
+//        mapview.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mapview.onPause();
+//        mapview.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mapview != null) {
-            mapview.onDestroy();
-        }
-        aMap = null;
+//        if (mapview != null) {
+//            mapview.onDestroy();
+//        }
+//        aMap = null;
     }
 
     @Override
     protected void initData() {
-
+        getCarData();
     }
 
     private void sendTerminalControl(boolean isStop) {
@@ -135,11 +128,6 @@ public class MapFragment extends BaseFragment {
         } else {
             ajaxParams.put("defences", "1");
         }
-//        if (isStop) {
-//            ajaxParams.put("parameter", "{defences:0}");
-//        } else {
-//            ajaxParams.put("parameter", "{defences:1}");
-//        }
         finalHttp.post(Api.URL + "test/device/terminalControl", ajaxParams, new AjaxCallBack<String>() {
 
             @Override
@@ -161,10 +149,30 @@ public class MapFragment extends BaseFragment {
     }
 
 
-    private void getCarData(){
+    private void getCarData() {
         FinalHttp finalHttp = new FinalHttp();
         AjaxParams ajaxParams = new AjaxParams();
-//        finalHttp.post(Api.URL + "");
+        ajaxParams.put("devNo", "013655558888");
+        ajaxParams.put("startTime", "2018-04-03 05:08:29");
+        ajaxParams.put("endTime", "2018-04-04 06:08:29");
+        ajaxParams.put("size", "0");
+        ajaxParams.put("sort", "asc");
+        finalHttp.post(Api.URL + "/monitor/car/track", new AjaxCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                super.onSuccess(s);
+            }
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                super.onFailure(t, errorNo, strMsg);
+            }
+        });
 
     }
 

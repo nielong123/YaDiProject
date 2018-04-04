@@ -4,21 +4,15 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
 import com.jaydenxiao.common.base.BaseActivity;
 
-import net.tsz.afinal.FinalHttp;
-import net.tsz.afinal.http.AjaxCallBack;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import gaode.trajectory.api.Api;
 import gaode.trajectory.ui.fragment.AlarmStatisticsFragment;
 import gaode.trajectory.ui.fragment.BaseInfoFragment;
 import gaode.trajectory.ui.fragment.MapFragment;
@@ -66,7 +60,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         fragments.add(TrajectoryFragment.newInstance());
         tabFragmentPagerAdapter = new TabFragmentPagerAdapter(fm, fragments);
         viewPager.setAdapter(tabFragmentPagerAdapter);
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(3);
         viewPager.setScanScroll(false);
     }
 
@@ -79,20 +73,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.monitoring:
-//                viewPager.setCurrentItem(0);
+                viewPager.setCurrentItem(0);
                 changeImage(0);
                 break;
             case R.id.base_info:
-//                viewPager.setCurrentItem(1);
+                viewPager.setCurrentItem(1);
                 changeImage(1);
                 break;
             case R.id.alarm_statistics:
                 changeImage(2);
-//                viewPager.setCurrentItem(2);
+                viewPager.setCurrentItem(2);
                 break;
             case R.id.history:
                 changeImage(3);
-//                viewPager.setCurrentItem(3);
+                viewPager.setCurrentItem(3);
                 break;
         }
     }

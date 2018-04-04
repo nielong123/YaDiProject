@@ -22,7 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import gaode.trajectory.bean.AlarmStatisticsBean;
+import gaode.trajectory.bean.TrajectoryBean;
 import gaode.trajectory.widget.TitleView;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
@@ -87,22 +87,22 @@ public class AlarmStatisticsActivity extends BaseActivity {
             @Override
             public void onSuccess(String s) {
                 super.onSuccess(s);
-                AlarmStatisticsBean bean = new Gson().fromJson(s, AlarmStatisticsBean.class);
-                if (AlarmStatisticsActivity.this.isDestroyed() || AlarmStatisticsActivity.this.isFinishing())
-                    return;
-                if (bean.getObj() == null) return;
-                data = bean.getObj();
-                for (int i = 0; i < bean.getObj().size(); i++) {
-                    List<String> item = data.get(i);
-                    entries.add(new BarEntry(i, Float.valueOf(item.get(1))));
-                }
-                BarDataSet set = new BarDataSet(entries, "BarDataSet");
-
-                BarData data = new BarData(set);
-                data.setBarWidth(0.7f); //设置自定义条形宽度
-                chart.setData(data);
-                chart.setFitBars(true); //使x轴完全适合所有条形
-                chart.invalidate(); // refresh
+//                AlarmStatisticsBean bean = new Gson().fromJson(s, AlarmStatisticsBean.class);
+//                if (AlarmStatisticsActivity.this.isDestroyed() || AlarmStatisticsActivity.this.isFinishing())
+//                    return;
+//                if (bean.getObj() == null) return;
+//                data = bean.getObj();
+//                for (int i = 0; i < bean.getObj().size(); i++) {
+//                    List<String> item = data.get(i);
+//                    entries.add(new BarEntry(i, Float.valueOf(item.get(1))));
+//                }
+//                BarDataSet set = new BarDataSet(entries, "BarDataSet");
+//
+//                BarData data = new BarData(set);
+//                data.setBarWidth(0.7f); //设置自定义条形宽度
+//                chart.setData(data);
+//                chart.setFitBars(true); //使x轴完全适合所有条形
+//                chart.invalidate(); // refresh
             }
 
             @Override
