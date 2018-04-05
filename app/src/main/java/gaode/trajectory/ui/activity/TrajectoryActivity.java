@@ -2,6 +2,7 @@ package gaode.trajectory.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,14 +18,21 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
+import com.autonavi.amap.mapcore.interfaces.IMarker;
+import com.bigkoo.pickerview.TimePickerView;
 import com.google.gson.Gson;
+import com.jaydenxiao.common.commonutils.LogUtils;
+import com.jaydenxiao.common.commonutils.TimeUtil;
+import com.jaydenxiao.common.commonutils.ToastUitl;
 import com.squareup.picasso.Picasso;
 
 import net.tsz.afinal.FinalHttp;
@@ -32,6 +40,7 @@ import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,6 +50,7 @@ import gaode.trajectory.adapter.TrajectRunnable;
 import gaode.trajectory.api.Api;
 import gaode.trajectory.bean.Bean;
 import gaode.trajectory.bean.TrajectoryBean;
+import gaode.trajectory.widget.TitleView;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
 /**
@@ -63,19 +73,14 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
     RelativeLayout playRoot;
     @BindView(R.id.seekbar)
     SeekBar seekbar;
+    @BindView(R.id.title_view)
+    TitleView titleView;
 
 
+    AMap.InfoWindowAdapter infoWindowAdapter;
 
     private String TAG = TrajectoryActivity.class.getName().toString().trim();
-    private String str;
-    private Bean bean;
     private AMap aMap;
-
-    private int maxIndex, index;
-
-    private AMap.InfoWindowAdapter infoWindowAdapter;
-
-    private Polyline polyline;
 
     private Marker startMarker;            //起点
 
@@ -85,9 +90,15 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
 
     private List<Bean.ReturnValueBean.DataListBean> beanList = new ArrayList<>();
 
-    private TrajectRunnable runnable;
+    String tv_start, tv_end;
 
-    private boolean isPlaying = false;
+    int index = 0;
+
+    private static final int START_STATUS = 0;
+    private static final int MOVE_STATUS = 1;
+    private static final int PAUSE_STATUS = 2;
+    private static final int FINISH_STATUS = 3;
+    private int mMarkerStatus = START_STATUS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,50 +134,69 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
     }
 
     void initView(Bundle savedInstanceState) {
-
+        titleView.setTitle("历史轨迹");
         mapview.onCreate(savedInstanceState);
         aMap = mapview.getMap();
+        start.setOnClickListener(this);
+        end.setOnClickListener(this);
+        search.setOnClickListener(this);
+        playImage.setOnClickListener(this);
         aMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(this));
-        UiSettings uiSettings = aMap.getUiSettings();
-        seekbar = (SeekBar) findViewById(R.id.seekbar);
         seekbar.setOnSeekBarChangeListener(this);
-//        switchButton = (SwitchButton) findViewById(R.id.switchButton);
-//        switchButton.setEnabled(true);
-//        switchButton.setOnCheckedChangeListener(this);
-        initMoveMarker();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.btn1:
-//                str = ReadStringUtil.ReadString(this, R.raw.trajectory1);
-//                break;
-//            case R.id.btn2:
-//                str = ReadStringUtil.ReadString(this, R.raw.trajectory2);
-//                break;
+            case R.id.start:
+                new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
+                    @Override
+                    public void onTimeSelect(Date date, View v) {
+                        tv_start = TimeUtil.formatData(TimeUtil.dateFormatYMDHMS, date.getTime() / 1000);
+                        start.setText(tv_start);
+                    }
+                }).build().show();
+                break;
+            case R.id.end:
+                new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
+                    @Override
+                    public void onTimeSelect(Date date, View v) {
+                        tv_end = TimeUtil.formatData(TimeUtil.dateFormatYMDHMS, date.getTime() / 1000);
+                        end.setText(tv_end);
+                    }
+                }).build().show();
+                break;
+            case R.id.search:
+                if (TextUtils.isEmpty(tv_end) || TextUtils.isEmpty(tv_start)) {
+                    ToastUitl.show("请选择时间", Toast.LENGTH_SHORT);
+                    break;
+                }
+                getTrajectoryHistory();
+                break;
+            case R.id.play_image:
+                if (mMarkerStatus == START_STATUS) {
+                    moveMarker.startSmoothMove();
+                    mMarkerStatus = MOVE_STATUS;
+                    Picasso.with(this).load(R.drawable.stop).into(playImage);
+                } else if (mMarkerStatus == MOVE_STATUS) {
+                    moveMarker.stopMove();
+                    mMarkerStatus = PAUSE_STATUS;
+                    Picasso.with(this).load(R.drawable.play).into(playImage);
+                } else if (mMarkerStatus == PAUSE_STATUS) {
+                    moveMarker.startSmoothMove();
+                    mMarkerStatus = MOVE_STATUS;
+                    Picasso.with(this).load(R.drawable.stop).into(playImage);
+                } else if (mMarkerStatus == FINISH_STATUS) {
+                    moveMarker.setPosition(points.get(0));
+                    moveMarker.setPoints(points);
+                    moveMarker.getMarker().showInfoWindow();
+                    moveMarker.startSmoothMove();
+                    mMarkerStatus = MOVE_STATUS;
+                    Picasso.with(this).load(R.drawable.stop).into(playImage);
+                }
+                break;
         }
     }
-
-
-    View.OnClickListener playClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (runnable != null) {
-                if (isPlaying) {
-                    runnable.stopPlay();
-                    Picasso.with(TrajectoryActivity.this).load(R.drawable.play).into(playImage);
-                } else {
-                    runnable.reStartPlay();
-                    Picasso.with(TrajectoryActivity.this).load(R.drawable.stop).into(playImage);
-                }
-                isPlaying = !isPlaying;
-            } else {
-                Toast.makeText(TrajectoryActivity.this, "请选择一条轨迹", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    };
 
 
     /******************
@@ -186,7 +216,6 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         Log.d(TAG, "seekBar.getProgress() = " + seekBar.getProgress());
-        runnable.setPlayIndex(seekBar.getProgress());
     }
 
     /****
@@ -208,12 +237,12 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
     void getTrajectoryHistory() {
         FinalHttp finalHttp = new FinalHttp();
         AjaxParams ajaxParams = new AjaxParams();
-        ajaxParams.put("devNo", "013655558888");
-        ajaxParams.put("startTime", "2018-04-03 05:08:29");
-        ajaxParams.put("endTime", "2018-04-04 06:08:29");
+        ajaxParams.put("devNo", Api.CAR);
+        ajaxParams.put("startTime", tv_start);
+        ajaxParams.put("endTime", tv_end);
         ajaxParams.put("size", "10");
         ajaxParams.put("sort", "asc");
-        finalHttp.post(Api.URL + "/monitor/car/track", ajaxParams, new AjaxCallBack<String>() {
+        finalHttp.post(Api.URL + "/monitor/test/car/track", ajaxParams, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -222,35 +251,75 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
             @Override
             public void onSuccess(String s) {
                 super.onSuccess(s);
+                if (TrajectoryActivity.this.isDestroyed() || TrajectoryActivity.this.isFinishing())
+                    return;
                 TrajectoryBean trajectoryBean = new Gson().fromJson(s, TrajectoryBean.class);
-//                data = trajectoryBean.getObj().getDevStateList();
-//                if (data == null) return;
-//                if (data.size() <= 2) return;
-//                maxIndex = data.size();
-//                displayPolyline();
+                if (trajectoryBean.getObj() != null) {
+                    ToastUitl.showShort(trajectoryBean.getMsg());
+                }
+                if (trajectoryBean.getMsg() != null) {
+                    ToastUitl.showShort(trajectoryBean.getMsg());
+                }
+                if (trajectoryBean.getObj() == null) return;
+                if (trajectoryBean.getObj().getDevStateList() == null) return;
+                ToastUitl.showShort("查询到" + trajectoryBean.getObj().getDevStateList().size() + "条数据");
+                initMoveMarker(trajectoryBean.getObj().getDevStateList());
             }
 
             @Override
             public void onFailure(Throwable t, int errorNo, String strMsg) {
                 super.onFailure(t, errorNo, strMsg);
+                ToastUitl.show("请求失败，请重试", Toast.LENGTH_SHORT);
             }
         });
     }
 
-    private void initMoveMarker() {
-        addPolylineInPlayGround();
+    private void initMoveMarker(final List<TrajectoryBean.ObjBean.DevStateListBean> data) {
+        List<LatLng> list = readLatLngs(data);
+
+        aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.custtexture)) //setCustomTextureList(bitmapDescriptors)
+                .addAll(list)
+                .useGradient(true)
+                .width(18));
         // 获取轨迹坐标点
-        List<LatLng> points = readLatLngs();
+        List<LatLng> points = readLatLngs(data);
         LatLngBounds.Builder b = LatLngBounds.builder();
         for (int i = 0; i < points.size(); i++) {
             b.include(points.get(i));
         }
         LatLngBounds bounds = b.build();
         aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-
+        if (moveMarker != null) {
+            moveMarker.removeMarker();
+        }
         moveMarker = new SmoothMoveMarker(aMap);
-        // 设置滑动的图标
+        if (startMarker != null) {
+            if (!startMarker.isRemoved()) {
+                startMarker.remove();
+            }
+        }
+        if (endMarker != null) {
+            if (!endMarker.isRemoved()) {
+                endMarker.remove();
+            }
+        }
+        LatLng startLatLng = new LatLng(list.get(0).latitude, list.get(0).longitude);
+        LatLng endLatLng = new LatLng(list.get(list.size() - 1).latitude, list.get(list.size() - 1).longitude);
+
+        MarkerOptions startOpt = new MarkerOptions().position(startLatLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.start))
+                .zIndex(10)
+                .draggable(false);
+        startMarker = aMap.addMarker(startOpt);
+        MarkerOptions endOpt = new MarkerOptions().position(endLatLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.end))
+                .zIndex(10)
+                .draggable(false);
+        endMarker = aMap.addMarker(endOpt);
+
+        endMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.end));
         moveMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.pot));
+
 
         /*
         //当移动Marker的当前位置不在轨迹起点，先从当前位置移动到轨迹上，再开始平滑移动
@@ -265,105 +334,38 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
         moveMarker.setPoints(points);//设置平滑移动的轨迹list
         moveMarker.setTotalDuration(40);//设置平滑移动的总时间
 
-//        aMap.setInfoWindowAdapter(infoWindowAdapter);
-        moveMarker.setMoveListener(
-                new SmoothMoveMarker.MoveListener() {
-                    @Override
-                    public void move(final double distance) {
+        startMarker.setPosition(startLatLng);
+        endMarker.setPosition(endLatLng);
 
-                        Log.i("MY", "distance:  " + distance);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-//                                if (infoWindowLayout != null && title != null && moveMarker.getMarker().isInfoWindowShown()) {
-//                                    title.setText("距离终点还有： " + (int) distance + "米");
-//                                }
-//                                if (distance == 0) {
-//                                    moveMarker.getMarker().hideInfoWindow();
-//                                    mMarkerStatus = FINISH_STATUS;
-//                                    mStartButton.setText("开始");
-//
-//                                }
-                            }
-                        });
-                    }
-                });
+        aMap.setInfoWindowAdapter(infoWindowAdapter);
         moveMarker.getMarker().showInfoWindow();
+        moveMarker.startSmoothMove();
+        moveMarker.setMoveListener(new SmoothMoveMarker.MoveListener() {
+            @Override
+            public void move(double v) {
+
+                seekbar.setProgress(moveMarker.getIndex());
+                LogUtils.logd("lat = " + data.get(moveMarker.getIndex()).getLatLng().getLat() + "   lnt = " + data.get(moveMarker.getIndex()).getLatLng().getLng());
+                LogUtils.logd("v = " + v);
+                if (v == 0) {
+                    moveMarker.getMarker().hideInfoWindow();
+                    mMarkerStatus = FINISH_STATUS;
+                    Picasso.with(TrajectoryActivity.this).load(R.drawable.stop).into(playImage);
+                }
+            }
+        });
+        seekbar.setMax(points.size());
     }
 
+    List<LatLng> points = new ArrayList<>();
 
-    private void addPolylineInPlayGround() {
-        List<LatLng> list = readLatLngs();
-        List<Integer> colorList = new ArrayList<Integer>();
-
-        aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.custtexture)) //setCustomTextureList(bitmapDescriptors)
-                .addAll(list)
-                .useGradient(true)
-                .width(18));
-    }
-
-    private List<LatLng> readLatLngs() {
-        List<LatLng> points = new ArrayList<LatLng>();
-        for (int i = 0; i < coords.length; i += 2) {
-            points.add(new LatLng(coords[i + 1], coords[i]));
+    private List<LatLng> readLatLngs(List<TrajectoryBean.ObjBean.DevStateListBean> data) {
+        points = new ArrayList<>();
+        for (TrajectoryBean.ObjBean.DevStateListBean bean : data) {
+            points.add(new LatLng(Double.valueOf(bean.getMapLatLng().getLat()),
+                    Double.valueOf(bean.getMapLatLng().getLng())));
         }
         return points;
     }
-
-    private double[] coords = {116.3499049793749, 39.97617053371078,
-            116.34978804908442, 39.97619854213431, 116.349674596623,
-            39.97623045687959, 116.34955525200917, 39.97626931100656,
-            116.34943728748914, 39.976285626595036, 116.34930864705592,
-            39.97628129172198, 116.34918981582413, 39.976260803938594,
-            116.34906721558868, 39.97623535890678, 116.34895185151584,
-            39.976214717128855, 116.34886935936889, 39.976280148755315,
-            116.34873954611332, 39.97628182112874, 116.34860763527448,
-            39.97626038855863, 116.3484658907622, 39.976306080391836,
-            116.34834585430347, 39.976358252119745, 116.34831166130878,
-            39.97645709321835, 116.34827643560175, 39.97655231226543,
-            116.34824186261169, 39.976658372925556, 116.34825080406188,
-            39.9767570732376, 116.34825631960626, 39.976869087779995,
-            116.34822111635201, 39.97698451764595, 116.34822901510276,
-            39.977079745909876, 116.34822234337618, 39.97718701787645,
-            116.34821627457707, 39.97730766147824, 116.34820593515043,
-            39.977417746816776, 116.34821013897107, 39.97753930933358
-            , 116.34821304891533, 39.977652209132174, 116.34820923399242,
-            39.977764016531076, 116.3482045955917, 39.97786190186833,
-            116.34822159449203, 39.977958856930286, 116.3482256370537,
-            39.97807288885813, 116.3482098441266, 39.978170063673524,
-            116.34819564465377, 39.978266951404066, 116.34820541974412,
-            39.978380693859116, 116.34819672351216, 39.97848741209275,
-            116.34816588867105, 39.978593409607825, 116.34818489339459,
-            39.97870216883567, 116.34818473446943, 39.978797222300166,
-            116.34817728972234, 39.978893492422685, 116.34816491505472,
-            39.978997133775266, 116.34815408537773, 39.97911413849568,
-            116.34812908154862, 39.97920553614499, 116.34809495907906,
-            39.979308267469264, 116.34805113358091, 39.97939658036473,
-            116.3480310509613, 39.979491697188685, 116.3480082124968,
-            39.979588529006875, 116.34799530586834, 39.979685789111635,
-            116.34798818413954, 39.979801430587926, 116.3479996420353,
-            39.97990758587515, 116.34798697544538, 39.980000796262615,
-            116.3479912988137, 39.980116318796085, 116.34799204219203,
-            39.98021407403913, 116.34798535084123, 39.980325006125696,
-            116.34797702460183, 39.98042511477518, 116.34796288754136,
-            39.98054129336908, 116.34797509821901, 39.980656820423505,
-            116.34793922017285, 39.98074576792626, 116.34792586413015,
-            39.98085620772756, 116.3478962642899, 39.98098214824056,
-            116.34782449883967, 39.98108306010269, 116.34774758827285,
-            39.98115277119176, 116.34761476652932, 39.98115430642997,
-            116.34749135408349, 39.98114590845294, 116.34734772765582,
-            39.98114337322547, 116.34722082902628, 39.98115066909245,
-            116.34708205250223, 39.98114532232906, 116.346963237696,
-            39.98112245161927, 116.34681500222743, 39.981136637759604,
-            116.34669622104072, 39.981146248090866, 116.34658043260109,
-            39.98112495260716, 116.34643721418927, 39.9811107163792,
-            116.34631638374302, 39.981085081075676, 116.34614782996252,
-            39.98108046779486, 116.3460256053666, 39.981049089345206,
-            116.34588814050122, 39.98104839362087, 116.34575119741586,
-            39.9810544889668, 116.34562885420186, 39.981040940565734,
-            116.34549232235582, 39.98105271658809, 116.34537348820508,
-            39.981052294975264, 116.3453513775533, 39.980956549928244
-    };
-
 
 }

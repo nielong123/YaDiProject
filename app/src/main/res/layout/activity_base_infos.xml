@@ -6,15 +6,43 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#fff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/back"
+            android:layout_width="48dp"
+            android:layout_height="48dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/fanhui" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="车辆信息" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/layout_vehicle_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:paddingTop="10dp"
+        android:background="#fff"
         android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:background="#fff">
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/vehicle_information"
@@ -22,7 +50,7 @@
             android:layout_height="wrap_content"
             android:text="车辆信息"
             android:textColor="#EC6A00"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <!---->
 
@@ -30,23 +58,23 @@
             android:id="@+id/vehicle_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/vehicle_information"
+            android:layout_marginTop="10dp"
             android:text="车牌号"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_vehicle_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:layout_below="@id/vehicle_information"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/vehicle_number"
             android:text="深圳123"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <!---->
 
@@ -54,42 +82,44 @@
             android:id="@+id/vehicle_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/vehicle_number"
+            android:layout_marginTop="10dp"
             android:text="当前状态"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_vehicle_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:layout_below="@id/vehicle_number"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/vehicle_state"
             android:text="行驶"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/iv_network"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_below="@id/vehicle_number"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/text_vehicle_state"
-            android:src="@drawable/play"/>
+            android:src="@drawable/play"
+            android:visibility="gone" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_below="@id/vehicle_number"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/iv_network"
-            android:src="@drawable/play"/>
+            android:src="@drawable/play"
+            android:visibility="gone" />
 
         <!---->
 
@@ -97,23 +127,23 @@
             android:id="@+id/update_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/vehicle_state"
+            android:layout_marginTop="10dp"
             android:text="更新时间"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_update_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:layout_below="@id/vehicle_state"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/update_time"
             android:text="2018_04_03 19:00"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <!---->
 
@@ -121,23 +151,23 @@
             android:id="@+id/last_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/update_time"
+            android:layout_marginTop="10dp"
             android:text="最后位置"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_last_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:layout_below="@id/update_time"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/last_location"
-            android:text="广东省深圳市"
+            android:text="广东省深圳市龙华区清湖"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <!---->
         s
@@ -152,11 +182,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:paddingTop="10dp"
+        android:background="#fff"
         android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:background="#fff">
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/user_information"
@@ -164,7 +194,7 @@
             android:layout_height="wrap_content"
             android:text="用户信心"
             android:textColor="#EC6A00"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <!---->
 
@@ -172,23 +202,23 @@
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/user_information"
+            android:layout_marginTop="10dp"
             android:text="姓名"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:layout_below="@id/user_information"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/username"
             android:text="test"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <!---->
 
@@ -196,24 +226,23 @@
             android:id="@+id/phone_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/username"
+            android:layout_marginTop="10dp"
             android:text="电话"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_phone_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:layout_below="@id/username"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/phone_number"
-            android:text="132xxxxxxx"
+            android:text="13297348975"
             android:textColor="#333"
-            android:textSize="14sp"/>
-
+            android:textSize="14sp" />
 
 
         <!---->
@@ -222,23 +251,23 @@
             android:id="@+id/gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/phone_number"
+            android:layout_marginTop="10dp"
             android:text="性别"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:layout_below="@id/phone_number"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/gender"
-            android:text="女"
+            android:text="男"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <!---->
 
@@ -246,23 +275,23 @@
             android:id="@+id/area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/gender"
+            android:layout_marginTop="10dp"
             android:text="地区"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:layout_below="@id/gender"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/area"
             android:text="深圳龙华区"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <!---->
 
@@ -271,23 +300,23 @@
             android:id="@+id/Usage_Counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/area"
+            android:layout_marginTop="10dp"
             android:text="次数"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_Usage_Counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:layout_below="@id/area"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/Usage_Counter"
             android:text="12"
             android:textColor="#333"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <!---->
 

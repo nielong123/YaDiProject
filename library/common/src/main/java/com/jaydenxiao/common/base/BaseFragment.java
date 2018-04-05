@@ -1,5 +1,7 @@
 package com.jaydenxiao.common.base;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -59,6 +61,7 @@ public abstract class BaseFragment<T extends BasePresenter, E extends BaseModel>
     public T mPresenter;
     public E mModel;
     public RxManager mRxManager;
+    protected Activity mActivity;
 
     @Nullable
     @Override
@@ -76,6 +79,22 @@ public abstract class BaseFragment<T extends BasePresenter, E extends BaseModel>
         initView(savedInstanceState);
         initData();
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mActivity = (Activity) context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.mActivity = activity;
+    }
+
+    public Activity getMyActivity() {
+        return mActivity;
     }
 
     //获取布局文件

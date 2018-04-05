@@ -4,15 +4,26 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jaydenxiao.common.base.BaseActivity;
+import com.jaydenxiao.common.commonutils.SPUtils;
+
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import gaode.trajectory.api.Api;
+import gaode.trajectory.bean.RegisterIdBean;
+import gaode.trajectory.bean.UserInfosBean;
 import gaode.trajectory.ui.fragment.AlarmStatisticsFragment;
 import gaode.trajectory.ui.fragment.BaseInfoFragment;
 import gaode.trajectory.ui.fragment.MapFragment;
@@ -33,8 +44,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     TextView history;
     @BindView(R.id.monitoring)
     TextView monitoring;
+    @BindView(R.id.setting)
+    LinearLayout setting;
 
     TabFragmentPagerAdapter tabFragmentPagerAdapter;
+
+    @Override
+    protected void onStart() {
+        //傳送registerId
+        String registrationID = SPUtils.getSharedStringData(mContext, "registrationID");
+        setRegisterId(registrationID);
+        super.onStart();
+    }
 
     @Override
     protected int getLayoutId() {
@@ -52,6 +73,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         alarmStatistics.setOnClickListener(this);
         history.setOnClickListener(this);
         monitoring.setOnClickListener(this);
+        setting.setOnClickListener(this);
         FragmentManager fm = getSupportFragmentManager();
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(MapFragment.newInstance());
@@ -90,6 +112,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(TrajectoryActivity.class);
 //                changeImage(3);
 //                viewPager.setCurrentItem(3);
+                break;
+            case R.id.setting:
+                startActivity(SettingActivity.class);
                 break;
         }
     }
@@ -132,5 +157,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         textView.setTextColor(getResources().getColor(colorId));
     }
 
+
+    /**
+     * 傳送registerId
+     */
+    public void setRegisterId(String regiId) {
+        FinalHttp finalHttp = new FinalHttp();
+        AjaxParams ajaxParams = new AjaxParams();
+        ajaxParams.put("regiId", regiId);
+        finalHttp.post(Api.URL + "test/device/registration", ajaxParams, new AjaxCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                super.onSuccess(s);
+                RegisterIdBean registerIdBean = new Gson().fromJson(s, RegisterIdBean.class);
+                String msg = registerIdBean.getMsg();
+                Log.e("MainActivity", msg);
+
+
+            }
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                super.onFailure(t, errorNo, strMsg);
+            }
+        });
+    }
 
 }

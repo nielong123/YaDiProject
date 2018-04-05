@@ -192,9 +192,9 @@ public class TrajectoryFragment extends BaseFragment implements View.OnClickList
     void getTrajectoryHistory() {
         FinalHttp finalHttp = new FinalHttp();
         AjaxParams ajaxParams = new AjaxParams();
-        ajaxParams.put("devNo", "013655558888");
-        ajaxParams.put("startTime", "2018-04-03 05:08:29");
-        ajaxParams.put("endTime", "2018-04-04 06:08:29");
+        ajaxParams.put("devNo", Api.CAR);
+        ajaxParams.put("startTime", tv_start);
+        ajaxParams.put("endTime", tv_end);
         ajaxParams.put("size", "10");
         ajaxParams.put("sort", "asc");
         finalHttp.post(Api.URL + "/monitor/car/track", ajaxParams, new AjaxCallBack<String>() {

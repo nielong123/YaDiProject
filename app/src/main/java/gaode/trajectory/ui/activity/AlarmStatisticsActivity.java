@@ -4,10 +4,15 @@ import android.os.Bundle;
 
 import com.aspsine.irecyclerview.IRecyclerView;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.google.gson.Gson;
 import com.jaydenxiao.common.base.BaseActivity;
 import com.jaydenxiao.common.commonutils.LogUtils;
 
@@ -18,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import gaode.trajectory.bean.AlarmStatisticsBean;
 import gaode.trajectory.widget.TitleView;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
@@ -31,7 +37,7 @@ public class AlarmStatisticsActivity extends BaseActivity {
     IRecyclerView recyclerview;
 
     List<BarEntry> entries = new ArrayList<>();
-    List<List<String>> data;
+    private List<List<String>> data;
 
 
     @Override
@@ -82,22 +88,29 @@ public class AlarmStatisticsActivity extends BaseActivity {
             @Override
             public void onSuccess(String s) {
                 super.onSuccess(s);
-//                AlarmStatisticsBean bean = new Gson().fromJson(s, AlarmStatisticsBean.class);
-//                if (AlarmStatisticsActivity.this.isDestroyed() || AlarmStatisticsActivity.this.isFinishing())
-//                    return;
-//                if (bean.getObj() == null) return;
-//                data = bean.getObj();
-//                for (int i = 0; i < bean.getObj().size(); i++) {
-//                    List<String> item = data.get(i);
-//                    entries.add(new BarEntry(i, Float.valueOf(item.get(1))));
-//                }
-//                BarDataSet set = new BarDataSet(entries, "BarDataSet");
-//
-//                BarData data = new BarData(set);
-//                data.setBarWidth(0.7f); //设置自定义条形宽度
-//                chart.setData(data);
-//                chart.setFitBars(true); //使x轴完全适合所有条形
-//                chart.invalidate(); // refresh
+                AlarmStatisticsBean bean = new Gson().fromJson(s, AlarmStatisticsBean.class);
+                if (AlarmStatisticsActivity.this.isDestroyed() || AlarmStatisticsActivity.this.isFinishing())
+                    return;
+                if (bean.getObj() == null) return;
+                data = bean.getObj().getContent();
+                for (int i = 0; i < data.size(); i++) {
+                    List<String> item = data.get(i);
+                    entries.add(new BarEntry(i, Float.valueOf(item.get(1))));
+                }
+                BarDataSet set = new BarDataSet(entries, "BarDataSet");
+
+                ArrayList<String> xValues = new ArrayList<String>();
+                for (int i = 0; i < data.size(); i++) {
+                    xValues.add(data.get(i).get(1) + "");
+                }
+                BarData barData = new BarData(set);
+                barData.setBarWidth(0.7f); // 设置自定义条形宽度
+                chart.setData(barData);
+                chart.setFitBars(true); // 使x轴完全适合所有条形
+                chart.invalidate(); // refresh
+                Description description = new Description();
+                description.setText("月度报表");
+                chart.setDescription(description);
             }
 
             @Override

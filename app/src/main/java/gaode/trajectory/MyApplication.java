@@ -1,10 +1,16 @@
 package gaode.trajectory;
 
+import android.text.TextUtils;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.jaydenxiao.common.baseapp.BaseApplication;
+import com.jaydenxiao.common.commonutils.SPUtils;
+
+import cn.jpush.android.api.JPushInterface;
+import gaode.trajectory.api.Api;
 
 
 public class MyApplication extends BaseApplication {
@@ -24,6 +30,13 @@ public class MyApplication extends BaseApplication {
         super.onCreate();
         myApp = this;
         initLocation();
+        // 初始化 推送框架 JPush
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
+        Api.CAR = SPUtils.getSharedStringData(this, "carNum");
+        if(TextUtils.isEmpty(Api.CAR)){
+            Api.CAR = "013511112222";
+        }
     }
 
     public AMapLocation getAppDBLocation() {

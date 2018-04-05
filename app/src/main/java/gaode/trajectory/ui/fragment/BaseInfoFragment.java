@@ -1,9 +1,6 @@
 package gaode.trajectory.ui.fragment;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,8 +12,6 @@ import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import gaode.trajectory.api.Api;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
@@ -87,7 +82,7 @@ public class BaseInfoFragment extends BaseFragment {
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_base_info;
+        return R.layout.activity_base_infos;
     }
 
     @Override

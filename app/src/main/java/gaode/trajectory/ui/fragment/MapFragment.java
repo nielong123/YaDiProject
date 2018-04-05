@@ -1,22 +1,41 @@
 package gaode.trajectory.ui.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.jaydenxiao.common.base.BaseFragment;
+import com.jaydenxiao.common.commonutils.TimeUtil;
+import com.jaydenxiao.common.commonutils.ToastUitl;
 
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import butterknife.BindView;
 import gaode.trajectory.api.Api;
+import gaode.trajectory.bean.CarOnTimeInfoBean;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
 /**
@@ -32,13 +51,27 @@ public class MapFragment extends BaseFragment {
     TextView address;
     @BindView(R.id.location_time)
     TextView locationTime;
-//    @BindView(R.id.mapview)
-//    TextureMapView mapview;
+    @BindView(R.id.mapview)
+    TextureMapView mapview;
     @BindView(R.id.checkbox)
     CheckBox checkbox;
 
+    Marker marker;
 
     AMap aMap;
+
+    static MapFragment mapFragment;
+
+//    private CarOnTimeInfoBean carOnTimeInfoBean;
+
+
+    static Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            getCarData();
+        }
+    };
 
     public MapFragment() {
         // Required empty public constructor
@@ -46,10 +79,17 @@ public class MapFragment extends BaseFragment {
 
     // TODO: Rename and change types and number of parameters
     public static MapFragment newInstance() {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        if (mapFragment == null) {
+            synchronized (MapFragment.class) {
+                if (mapFragment == null) {
+                    mapFragment = new MapFragment();
+                    Bundle args = new Bundle();
+                    mapFragment.setArguments(args);
+                    return mapFragment;
+                }
+            }
+        }
+        return mapFragment;
     }
 
     @Override
@@ -68,23 +108,32 @@ public class MapFragment extends BaseFragment {
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
-//        mapview.onCreate(savedInstanceState);
-//        if (aMap == null) {
-//            aMap = mapview.getMap();
-//        }
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mapview.onCreate(savedInstanceState);
+        if (aMap == null) {
+            aMap = mapview.getMap();
+        }
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(7f));
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 sendTerminalControl(b);
             }
         });
+        timer.schedule(timerTask, 2000, 5000);
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        mapview.onSaveInstanceState(outState);
+        mapview.onSaveInstanceState(outState);
     }
 
     @Override
@@ -95,38 +144,38 @@ public class MapFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-//        mapview.onResume();
+        mapview.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        mapview.onPause();
+        mapview.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        if (mapview != null) {
-//            mapview.onDestroy();
-//        }
-//        aMap = null;
+        if (mapview != null) {
+            mapview.onDestroy();
+        }
+        aMap = null;
     }
 
     @Override
     protected void initData() {
-        getCarData();
+
     }
 
     private void sendTerminalControl(boolean isStop) {
 
         FinalHttp finalHttp = new FinalHttp();
         AjaxParams ajaxParams = new AjaxParams();
-        ajaxParams.put("clientId", "013511112222");
+        ajaxParams.put("clientId", Api.CAR);
         if (isStop) {
-            ajaxParams.put("defences", "0");
-        } else {
             ajaxParams.put("defences", "1");
+        } else {
+            ajaxParams.put("defences", "0");
         }
         finalHttp.post(Api.URL + "test/device/terminalControl", ajaxParams, new AjaxCallBack<String>() {
 
@@ -138,6 +187,7 @@ public class MapFragment extends BaseFragment {
             @Override
             public void onSuccess(String s) {
                 super.onSuccess(s);
+                ToastUitl.showShort("操作成功");
             }
 
             @Override
@@ -149,15 +199,11 @@ public class MapFragment extends BaseFragment {
     }
 
 
-    private void getCarData() {
+    static private void getCarData() {
         FinalHttp finalHttp = new FinalHttp();
         AjaxParams ajaxParams = new AjaxParams();
-        ajaxParams.put("devNo", "013655558888");
-        ajaxParams.put("startTime", "2018-04-03 05:08:29");
-        ajaxParams.put("endTime", "2018-04-04 06:08:29");
-        ajaxParams.put("size", "0");
-        ajaxParams.put("sort", "asc");
-        finalHttp.post(Api.URL + "/monitor/car/track", new AjaxCallBack<String>() {
+        ajaxParams.put("devNos[]", Api.CAR);
+        finalHttp.post(Api.URL + "monitor/test/car/getHeart", ajaxParams, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -166,6 +212,15 @@ public class MapFragment extends BaseFragment {
             @Override
             public void onSuccess(String s) {
                 super.onSuccess(s);
+                CarOnTimeInfoBean carOnTimeInfoBean = new Gson().fromJson(s, CarOnTimeInfoBean.class);
+                if (carOnTimeInfoBean == null) return;
+                if (carOnTimeInfoBean.getMsg() != null) {
+                    ToastUitl.showShort(carOnTimeInfoBean.getMsg());
+                }
+                if (carOnTimeInfoBean.getObj() == null) {
+                    return;
+                }
+                MapFragment.newInstance().updata(carOnTimeInfoBean);
             }
 
             @Override
@@ -175,5 +230,40 @@ public class MapFragment extends BaseFragment {
         });
 
     }
+
+    private void updata(final CarOnTimeInfoBean carOnTimeInfoBean) {
+        getMyActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                carId.setText(carOnTimeInfoBean.getObj().get(0).getDevState().getDevNo());
+                address.setText(carOnTimeInfoBean.getObj().get(0).getDevState().getPoi());
+                String time = TimeUtil.formatData(TimeUtil.dateFormatYMDHMS, Long.valueOf(carOnTimeInfoBean.getObj().get(0).getDevState().getGpsStamp()) / 1000);
+                locationTime.setText("时间:" + time);
+                if (marker != null) {
+                    if (!marker.isRemoved()) {
+                        marker.remove();
+                    }
+                }
+                double lat = Double.valueOf(carOnTimeInfoBean.getObj().get(0).getDevState().getLatLng().getLat());
+                double lng = Double.valueOf(carOnTimeInfoBean.getObj().get(0).getDevState().getLatLng().getLng());
+                LatLng latLng = new LatLng(lat, lng);
+                MarkerOptions startOpt = new MarkerOptions().position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pot))
+                        .zIndex(10)
+                        .draggable(false);
+                marker = MapFragment.newInstance().aMap.addMarker(startOpt);
+                aMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            }
+        });
+    }
+
+
+    Timer timer = new Timer();
+    TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            handler.sendEmptyMessage(0);
+        }
+    };
 
 }
