@@ -76,7 +76,7 @@ public class TrajectoryFragment extends BaseFragment implements View.OnClickList
 
     private SmoothMoveMarker moveMarker;
 
-    List<TrajectoryBean.ObjBean.DevStateListBean> data;
+    List<TrajectoryBean.DetailBean> data;
 
     String tv_start, tv_end;
     AMap aMap;
@@ -170,7 +170,7 @@ public class TrajectoryFragment extends BaseFragment implements View.OnClickList
      */
     private void displayPolyline() {
         List<LatLng> latlngList = new ArrayList<>();
-        for (TrajectoryBean.ObjBean.DevStateListBean bean : data) {
+        for (TrajectoryBean.DetailBean bean : data) {
             if (bean != null) {
                 LatLng latlng = new LatLng((Double.valueOf(bean.getMapLatLng().getLat())),
                         Double.valueOf(bean.getMapLatLng().getLng()));
@@ -207,7 +207,7 @@ public class TrajectoryFragment extends BaseFragment implements View.OnClickList
             public void onSuccess(String s) {
                 super.onSuccess(s);
                 TrajectoryBean trajectoryBean = new Gson().fromJson(s, TrajectoryBean.class);
-                data = trajectoryBean.getObj().getDevStateList();
+                data = trajectoryBean.getDetail();
                 if (data == null) return;
                 if (data.size() <= 2) return;
                 maxIndex = data.size();

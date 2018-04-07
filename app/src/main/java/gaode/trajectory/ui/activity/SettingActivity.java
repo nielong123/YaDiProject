@@ -12,6 +12,7 @@ import com.parse.codec.binary.StringUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import gaode.trajectory.api.Api;
 import gaode.trajectory.widget.TitleView;
 import gaodedemo.nl.org.gaodedemoapplication.R;
 
@@ -47,7 +48,8 @@ public class SettingActivity extends BaseActivity {
             ToastUitl.showShort("必填");
             return;
         }
-        SPUtils.setSharedStringData(this, carNum.getText().toString().trim(), "carNum");
+        SPUtils.setSharedStringData(this, "carNum", carNum.getText().toString().trim());
+        Api.CAR = carNum.getText().toString().trim();
         ToastUitl.showShort("保存成功");
         finish();
     }

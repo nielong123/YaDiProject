@@ -98,7 +98,7 @@ public class BaseInfoActivity extends BaseActivity {
     private void getCarData() {
         FinalHttp finalHttp = new FinalHttp();
         AjaxParams ajaxParams = new AjaxParams();
-        ajaxParams.put("devNo", "013655558888");
+        ajaxParams.put("devNo", Api.CAR);
         ajaxParams.put("pageSize", "1");
         finalHttp.post("http://180.101.253.139:30002/asset/car/query", new AjaxCallBack<String>() {
             @Override

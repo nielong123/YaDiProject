@@ -13,6 +13,7 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
+import gaode.trajectory.ui.activity.AlarmDetailActivity;
 import gaode.trajectory.ui.activity.AlarmStatisticsActivity;
 
 /**
@@ -97,7 +98,7 @@ public class JPushNotificationReceiver extends BroadcastReceiver
 
         if ("alert".equals(type))
         {
-            Intent mIntent = new Intent(context, AlarmStatisticsActivity.class);
+            Intent mIntent = new Intent(context, AlarmDetailActivity.class);
             mIntent.putExtras(bundle);
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(mIntent);

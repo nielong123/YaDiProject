@@ -88,7 +88,7 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
 
     private SmoothMoveMarker moveMarker;             //可移动的点
 
-    private List<Bean.ReturnValueBean.DataListBean> beanList = new ArrayList<>();
+    List<TrajectoryBean.DetailBean> trajectoryData;
 
     String tv_start, tv_end;
 
@@ -174,6 +174,10 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
                 getTrajectoryHistory();
                 break;
             case R.id.play_image:
+                if (trajectoryData == null) {
+                    ToastUitl.showShort("没有查询轨迹，请重试");
+                    return;
+                }
                 if (mMarkerStatus == START_STATUS) {
                     moveMarker.startSmoothMove();
                     mMarkerStatus = MOVE_STATUS;
@@ -240,9 +244,7 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
         ajaxParams.put("devNo", Api.CAR);
         ajaxParams.put("startTime", tv_start);
         ajaxParams.put("endTime", tv_end);
-        ajaxParams.put("size", "10");
-        ajaxParams.put("sort", "asc");
-        finalHttp.post(Api.URL + "/monitor/test/car/track", ajaxParams, new AjaxCallBack<String>() {
+        finalHttp.post(Api.URL + "monitor/test/car/track", ajaxParams, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -254,16 +256,17 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
                 if (TrajectoryActivity.this.isDestroyed() || TrajectoryActivity.this.isFinishing())
                     return;
                 TrajectoryBean trajectoryBean = new Gson().fromJson(s, TrajectoryBean.class);
-                if (trajectoryBean.getObj() != null) {
+                if (trajectoryBean.getDetail() != null) {
                     ToastUitl.showShort(trajectoryBean.getMsg());
                 }
                 if (trajectoryBean.getMsg() != null) {
                     ToastUitl.showShort(trajectoryBean.getMsg());
                 }
-                if (trajectoryBean.getObj() == null) return;
-                if (trajectoryBean.getObj().getDevStateList() == null) return;
-                ToastUitl.showShort("查询到" + trajectoryBean.getObj().getDevStateList().size() + "条数据");
-                initMoveMarker(trajectoryBean.getObj().getDevStateList());
+                if (trajectoryBean.getDetail() == null) return;
+                if (trajectoryBean.getDetail().size() == 0) return;
+                ToastUitl.showShort("查询到" + trajectoryBean.getDetail().size() + "条数据");
+                trajectoryData = trajectoryBean.getDetail();
+                initMoveMarker(trajectoryData);
             }
 
             @Override
@@ -274,7 +277,7 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
         });
     }
 
-    private void initMoveMarker(final List<TrajectoryBean.ObjBean.DevStateListBean> data) {
+    private void initMoveMarker(final List<TrajectoryBean.DetailBean> data) {
         List<LatLng> list = readLatLngs(data);
 
         aMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.custtexture)) //setCustomTextureList(bitmapDescriptors)
@@ -359,9 +362,9 @@ public final class TrajectoryActivity extends Activity implements View.OnClickLi
 
     List<LatLng> points = new ArrayList<>();
 
-    private List<LatLng> readLatLngs(List<TrajectoryBean.ObjBean.DevStateListBean> data) {
+    private List<LatLng> readLatLngs(List<TrajectoryBean.DetailBean> data) {
         points = new ArrayList<>();
-        for (TrajectoryBean.ObjBean.DevStateListBean bean : data) {
+        for (TrajectoryBean.DetailBean bean : data) {
             points.add(new LatLng(Double.valueOf(bean.getMapLatLng().getLat()),
                     Double.valueOf(bean.getMapLatLng().getLng())));
         }

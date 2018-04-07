@@ -7,7 +7,7 @@ package gaode.trajectory.api;
 public class Api {
 
     //http://180.101.253.139:30002/asset/admin/monitor/car/query"
-    public static final String URL = "http://180.101.253.139:30002/asset/";
+    public static final String URL = "http://180.101.253.139:30003/asset/";
 
     public static String CAR = "013511112222";
 }

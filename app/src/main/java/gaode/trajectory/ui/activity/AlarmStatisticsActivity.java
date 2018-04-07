@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import gaode.trajectory.api.Api;
 import gaode.trajectory.bean.AlarmStatisticsBean;
 import gaode.trajectory.widget.TitleView;
 import gaodedemo.nl.org.gaodedemoapplication.R;
@@ -78,7 +79,7 @@ public class AlarmStatisticsActivity extends BaseActivity {
 
     private void getData() {
         FinalHttp finalHttp = new FinalHttp();
-        finalHttp.post("http://180.101.253.139:30002/asset/test/device/getAlertHistory", new AjaxCallBack<String>() {
+        finalHttp.post(Api.URL + "test/device/getAlertHistory", new AjaxCallBack<String>() {
 
             @Override
             public void onStart() {

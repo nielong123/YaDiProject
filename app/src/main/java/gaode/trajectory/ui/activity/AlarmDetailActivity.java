@@ -20,6 +20,7 @@ import net.tsz.afinal.http.AjaxParams;
 
 import butterknife.BindView;
 import gaode.trajectory.bean.AlarmDetailBean;
+import gaode.trajectory.bean.AlarmDetailsBean;
 import gaode.trajectory.widget.SpaceItemDecoration;
 import gaode.trajectory.widget.TitleView;
 import gaodedemo.nl.org.gaodedemoapplication.R;
@@ -33,7 +34,7 @@ public class AlarmDetailActivity extends BaseActivity {
 
     String month;
 
-    AlarmDetailBean alarmDetailBean;
+    AlarmDetailsBean alarmDetaislBean;
 
     CommonRecycleViewAdapter commonRecycleViewAdapter;
 
@@ -54,13 +55,13 @@ public class AlarmDetailActivity extends BaseActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         titleView.setTitle("报警详情");
-        commonRecycleViewAdapter = new CommonRecycleViewAdapter<AlarmDetailBean.ObjBean.ContentBean>(this, R.layout.layout_item_alarm_detail) {
+        commonRecycleViewAdapter = new CommonRecycleViewAdapter<AlarmDetailsBean.ObjBean.ContentBean>(this, R.layout.layout_item_alarm_detail) {
             @Override
-            public void convert(ViewHolderHelper helper, AlarmDetailBean.ObjBean.ContentBean contentBean) {
-                ((TextView) helper.getView(R.id.time)).setText(TimeUtil.formatData(TimeUtil.dateFormatYMDHMS, Long.valueOf(contentBean.getAlertStartTimes()) / 1000));
-                ((TextView) helper.getView(R.id.address)).setText(contentBean.getPosition() + contentBean.getRegion());
+            public void convert(ViewHolderHelper helper, AlarmDetailsBean.ObjBean.ContentBean contentBean) {
+                ((TextView) helper.getView(R.id.time)).setText(TimeUtil.formatDataFuck(contentBean.getAlertLastTime()));
                 ((TextView) helper.getView(R.id.event)).setText(contentBean.getAlertEvent());
             }
+
         };
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerview.addItemDecoration(new SpaceItemDecoration(10));
@@ -86,7 +87,7 @@ public class AlarmDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        month = getIntent().getExtras().getString("month");
+//        month = getIntent().getExtras().getString("month");
         getData();
     }
 
@@ -95,8 +96,9 @@ public class AlarmDetailActivity extends BaseActivity {
         AjaxParams ajaxParams = new AjaxParams();
         ajaxParams.put("pageIndex", pageIndex + "");
         ajaxParams.put("pageSize", pageSize + "");
-        ajaxParams.put("month", month);
-        finalHttp.post("http://180.101.253.139:30002/asset/test/device/getAlerDetail", ajaxParams, new AjaxCallBack<String>() {
+        ajaxParams.put("startDate", TimeUtil.getNextDay(-10));
+        ajaxParams.put("endDate", TimeUtil.formatDate(TimeUtil.getCurrentDay()));
+        finalHttp.post("http://180.101.253.139:30002/asset//test/device/getAlert", ajaxParams, new AjaxCallBack<String>() {
 
             @Override
             public void onStart() {
@@ -110,9 +112,9 @@ public class AlarmDetailActivity extends BaseActivity {
                     return;
                 }
                 recyclerview.setRefreshing(false);
-                alarmDetailBean = new Gson().fromJson(s, AlarmDetailBean.class);
-                if (alarmDetailBean.getObj() == null) return;
-                commonRecycleViewAdapter.addAll(alarmDetailBean.getObj().getContent());
+                alarmDetaislBean = new Gson().fromJson(s, AlarmDetailsBean.class);
+                if (alarmDetaislBean.getObj() == null) return;
+                commonRecycleViewAdapter.addAll(alarmDetaislBean.getObj().getContent());
             }
 
             @Override

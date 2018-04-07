@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //                changeImage(1);
                 break;
             case R.id.alarm_statistics:
-                startActivity(AlarmStatisticsActivity.class);
+                startActivity(AlarmDetailActivity.class);
 //                changeImage(2);
 //                viewPager.setCurrentItem(2);
                 break;

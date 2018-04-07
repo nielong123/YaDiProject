@@ -7,9 +7,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
@@ -55,14 +57,14 @@ public class MapFragment extends BaseFragment {
     TextureMapView mapview;
     @BindView(R.id.checkbox)
     CheckBox checkbox;
+    @BindView(R.id.state)
+    ImageView state;
 
     Marker marker;
 
     AMap aMap;
 
     static MapFragment mapFragment;
-
-//    private CarOnTimeInfoBean carOnTimeInfoBean;
 
 
     static Handler handler = new Handler() {
@@ -212,7 +214,12 @@ public class MapFragment extends BaseFragment {
             @Override
             public void onSuccess(String s) {
                 super.onSuccess(s);
-                CarOnTimeInfoBean carOnTimeInfoBean = new Gson().fromJson(s, CarOnTimeInfoBean.class);
+                CarOnTimeInfoBean carOnTimeInfoBean = null;
+                try {
+                    carOnTimeInfoBean = new Gson().fromJson(s, CarOnTimeInfoBean.class);
+                } catch (Exception e) {
+                    Log.e("error", e.getMessage());
+                }
                 if (carOnTimeInfoBean == null) return;
                 if (carOnTimeInfoBean.getMsg() != null) {
                     ToastUitl.showShort(carOnTimeInfoBean.getMsg());
@@ -235,17 +242,20 @@ public class MapFragment extends BaseFragment {
         getMyActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                carId.setText(carOnTimeInfoBean.getObj().get(0).getDevState().getDevNo());
-                address.setText(carOnTimeInfoBean.getObj().get(0).getDevState().getPoi());
-                String time = TimeUtil.formatData(TimeUtil.dateFormatYMDHMS, Long.valueOf(carOnTimeInfoBean.getObj().get(0).getDevState().getGpsStamp()) / 1000);
-                locationTime.setText("时间:" + time);
+//                carOnTimeInfoBean.getObj().getDetail().get(0).getStatus().getDetail
+//                if( carOnTimeInfoBean.getObj().get(0).getDevState().ge defence){
+//                    state
+//                }
+                carId.setText(carOnTimeInfoBean.getObj().getDetail().get(0).getDevNo());
+                address.setText(carOnTimeInfoBean.getObj().getDetail().get(0).getPoi());
+                locationTime.setText("时间:" + TimeUtil.formatDataFuck(carOnTimeInfoBean.getObj().getDetail().get(0).getGpsStamp()));
                 if (marker != null) {
                     if (!marker.isRemoved()) {
                         marker.remove();
                     }
                 }
-                double lat = Double.valueOf(carOnTimeInfoBean.getObj().get(0).getDevState().getLatLng().getLat());
-                double lng = Double.valueOf(carOnTimeInfoBean.getObj().get(0).getDevState().getLatLng().getLng());
+                double lat = Double.valueOf(carOnTimeInfoBean.getObj().getDetail().get(0).getMapLatLng().getLat());
+                double lng = Double.valueOf(carOnTimeInfoBean.getObj().getDetail().get(0).getMapLatLng().getLng());
                 LatLng latLng = new LatLng(lat, lng);
                 MarkerOptions startOpt = new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.pot))
